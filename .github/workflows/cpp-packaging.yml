@@ -345,8 +345,6 @@ jobs:
           msvc_runtime: "dynamic"
         - os: ubuntu-20.04
           build_type: "Debug"
-        - os: ubuntu-20.04
-          architecture: "arm64"
         - os: windows-latest
           architecture: "arm64"
 
