@@ -267,6 +267,38 @@ def install_x86_support_libraries(gha_build=False):
         subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT,
                        check=True)
 
+def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
+    # Define base URL and repository components
+    base_url = "http://ports.ubuntu.com/ubuntu-ports"
+    canonical_base_url = "http://archive.canonical.com/ubuntu"
+    components = "main restricted universe multiverse"
+    sections = ["", "updates", "backports", "security"]
+    partner_section = "partner"
+
+    # Path to the sources list file
+    sources_list_path = "/etc/apt/sources.list.d/ubuntu-ports.list"
+
+    try:
+        with open(sources_list_path, 'a') as file:
+            for arch in architectures:
+                # Add entries for main, updates, backports, and security
+                for section in sections:
+                    suffix = f" {section}".strip()
+                    repo_line = f"deb [arch={arch}] {base_url} {release}{suffix} {components}\n"
+                    src_repo_line = f"deb-src [arch={arch}] {base_url} {release}{suffix} {components}\n"
+                    file.write(repo_line)
+                    file.write(src_repo_line)
+
+                # Add entries for Canonical partner repository
+                repo_line = f"deb [arch={arch}] {canonical_base_url} {release} {partner_section}\n"
+                src_repo_line = f"deb-src [arch={arch}] {canonical_base_url} {release} {partner_section}\n"
+                file.write(repo_line)
+                file.write(src_repo_line)
+
+        print(f"Ubuntu ports for {', '.join(architectures)} added to {sources_list_path}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
 def install_arm_support_libraries(gha_build=False):
     """Install support libraries needed to build ARM32 and ARM64 on x86_64 hosts.
 
@@ -292,6 +324,7 @@ def install_arm_support_libraries(gha_build=False):
         if process.returncode != 0:
             # This implies not all of the required packages are already installed on
             # user's machine. Install them.
+            add_ubuntu_ports()
             run_command(['dpkg', '--add-architecture', 'armhf'], as_root=True, check=True)
             run_command(['dpkg', '--add-architecture', 'aarch64'], as_root=True, check=True)
             run_command(['apt', 'update'], as_root=True, check=True)
