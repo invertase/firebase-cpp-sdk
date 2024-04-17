@@ -275,9 +275,7 @@ def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
     sections = ["", "updates", "backports", "security"]
     partner_section = "partner"
     sources_list_path = "/etc/apt/sources.list.d/ubuntu-ports.list"
-
-    # Clean the file to avoid duplicates
-    run_command(['echo', '', '>', sources_list_path], as_root=True, print_cmd=True)
+    run_command(f"echo '' > {sources_list_path}", as_root=True, print_cmd=True)
     for arch in architectures:
         for section in sections:
             suffix = f"-{section}" if section else ""
