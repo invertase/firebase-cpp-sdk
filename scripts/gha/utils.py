@@ -280,7 +280,7 @@ def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
     run_command(['echo', '', '>', sources_list_path], as_root=True, print_cmd=True)
     for arch in architectures:
         for section in sections:
-            suffix = f" {section}".strip().replace(" ", "-")
+            suffix = f"-{section}" if section else ""
             repo_line = f'deb [arch={arch}] {base_url} {release}{suffix} {components}'
             src_repo_line = f'deb-src [arch={arch}] {base_url} {release}{suffix} {components}'
             command = f"echo '{repo_line}' >> {sources_list_path}; echo '{src_repo_line}' >> {sources_list_path}"
