@@ -266,3 +266,44 @@ def install_x86_support_libraries(gha_build=False):
       with open(os.devnull, "w") as devnull:
         subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT,
                        check=True)
+
+def install_arm32_support_libraries(gha_build=False):
+    """Install support libraries needed to build ARM32 on x86_64 hosts.
+
+    Args:
+      gha_build: Pass in True if running on a GitHub runner; this will activate
+                 workarounds that might be undesirable on a personal system (e.g.
+                 downgrading Ubuntu packages).
+    """
+    if is_linux_os():
+        packages = ['gcc-arm-linux-gnueabihf', 'g++-arm-linux-gnueabihf',
+                    'libglib2.0-dev:armhf', 'libsecret-1-dev:armhf',
+                    'libpthread-stubs0-dev:armhf', 'libssl-dev:armhf',
+                    'libsecret-1-0:armhf']
+        remove_packages = []
+
+        # First check if these packages exist on the machine already
+        with open(os.devnull, "w") as devnull:
+            process = subprocess.run(["dpkg", "-s"] + packages, stdout=devnull,
+                                     stderr=subprocess.STDOUT)
+
+        if process.returncode != 0:
+            # This implies not all of the required packages are already installed on
+            # user's machine. Install them.
+            run_command(['dpkg', '--add-architecture', 'armhf'], as_root=True,
+                        check=True)
+            run_command(['apt', 'update'], as_root=True, check=True)
+            run_command(['apt', 'install', 'aptitude'], as_root=True, check=True)
+            if gha_build:
+                # Remove libpcre to prevent package conflicts.
+                # Only remove packages on GitHub runners.
+                remove_packages = ['libpcre3-dev:amd64', 'libpcre3:amd64']
+            # Note: With aptitude, you can remove package 'xyz' by specifying 'xyz-'
+            # in the package list.
+            run_command(['aptitude', 'install', '-V', '-y'] + packages +
+                        ['%s-' % pkg for pkg in remove_packages], as_root=True, check=True)
+
+            # Check if the packages were installed
+            with open(os.devnull, "w") as devnull:
+                subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT,
+                               check=True)

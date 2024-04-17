@@ -307,7 +307,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-20.04, macos-13]
         build_type: ["Release", "Debug"]
-        architecture: ["x64", "x86", "arm64"]
+        architecture: ["x64", "x86", "arm64", "arm32"]
         msvc_runtime: ["static", "dynamic"]
         linux_abi: ["legacy", "c++11"]
         python_version: [3.8]
@@ -341,12 +341,16 @@ jobs:
           linux_abi: "c++11"
         - os: macos-13
           build_type: "Debug"
+        - os: macos-13
+          build_type: "arm32"
         - os: ubuntu-20.04
           msvc_runtime: "dynamic"
         - os: ubuntu-20.04
           build_type: "Debug"
         - os: windows-latest
           architecture: "arm64"
+        - os: windows-latest
+          architecture: "arm32"
 
     steps:
       - name: Store git credentials for all git commands
