@@ -251,7 +251,7 @@ def main():
   if args.arch == 'x86' and utils.is_linux_os():
     utils.install_x86_support_libraries(args.gha_build)
 
-  if (args.arch == 'arm32' or args.arch == 'arm64') and utils.is_linux_os():
+  if args.arch == 'arm32' and utils.is_linux_os():
     utils.install_arm_support_libraries(args.gha_build)
 
   # Install C++ dependencies using vcpkg
