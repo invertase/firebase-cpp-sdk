@@ -50,7 +50,8 @@ def run_command(cmd, capture_output=False, cwd=None, check=False, as_root=False,
  """
 
  if as_root and (is_mac_os() or is_linux_os()):
-      cmd = ['sudo', 'bash', '-c', ' '.join(cmd)]
+      command_str = ' '.join(cmd) if isinstance(cmd, list) else cmd
+      cmd = ['sudo', 'bash', '-c', command_str]
 
  cmd_string = ' '.join(cmd)
  if print_cmd:
@@ -277,12 +278,11 @@ def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
     for arch in architectures:
         for section in sections:
             suffix = f" {section}".strip()
-            repo_line = f"deb [arch={arch}] {base_url} {release}{suffix} {components}"
-            src_repo_line = f"deb-src [arch={arch}] {base_url} {release}{suffix} {components}"
+            repo_line = f'deb [arch={arch}] {base_url} {release}{suffix} {components}'
+            src_repo_line = f'deb-src [arch={arch}] {base_url} {release}{suffix} {components}'
             command = f"echo '{repo_line}' >> {sources_list_path}; echo '{src_repo_line}' >> {sources_list_path}"
             run_command(command, as_root=True, print_cmd=True)
 
-        # Canonical partner repository
         repo_line = f"deb [arch={arch}] {canonical_base_url} {release} {partner_section}"
         src_repo_line = f"deb-src [arch={arch}] {canonical_base_url} {release} {partner_section}"
         command = f"echo '{repo_line}' >> {sources_list_path}; echo '{src_repo_line}' >> {sources_list_path}"
