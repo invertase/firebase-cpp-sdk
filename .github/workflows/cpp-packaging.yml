@@ -342,7 +342,7 @@ jobs:
         - os: macos-13
           build_type: "Debug"
         - os: macos-13
-          build_type: "arm32"
+          architecture: "arm32"
         - os: ubuntu-20.04
           msvc_runtime: "dynamic"
         - os: ubuntu-20.04
