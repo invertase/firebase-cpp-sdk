@@ -4,19 +4,19 @@ on:
     branches:
       # Run a full packaging step any time a new branch is merged into main.
       - main
-  schedule:
-    - cron: "0 8 * * *"  # 8am UTC = 12am PST / 1am PDT
+  # schedule:
+    # - cron: "0 8 * * *"  # 8am UTC = 12am PST / 1am PDT
   workflow_dispatch:
     inputs:
       preserveIntermediateArtifacts:
         description: 'preserve intermediate artifacts?'
-        default: 0
+        default: 1
       verboseBuild:
         description: 'verbose build?'
         default: 0
       skipIntegrationTests:
         description: 'skip integration tests?'
-        default: 0
+        default: 1
       downloadPublicVersion:
         description: 'public version # to test against'
       downloadPreviousRun:
