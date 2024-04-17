@@ -50,7 +50,7 @@ def run_command(cmd, capture_output=False, cwd=None, check=False, as_root=False,
  """
 
  if as_root and (is_mac_os() or is_linux_os()):
-   cmd.insert(0, 'sudo')
+      cmd = ['sudo', 'bash', '-c', ' '.join(cmd)]
 
  cmd_string = ' '.join(cmd)
  if print_cmd:
@@ -268,7 +268,6 @@ def install_x86_support_libraries(gha_build=False):
                        check=True)
 
 def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
-    # Define base URL and repository components
     base_url = "http://ports.ubuntu.com/ubuntu-ports"
     canonical_base_url = "http://archive.canonical.com/ubuntu"
     components = "main restricted universe multiverse"
@@ -278,15 +277,16 @@ def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
     for arch in architectures:
         for section in sections:
             suffix = f" {section}".strip()
-            repo_line = f'deb [arch={arch}] {base_url} {release}{suffix} {components}'
-            src_repo_line = f'deb-src [arch={arch}] {base_url} {release}{suffix} {components}'
-            run_command(['echo', repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
-            run_command(['echo', src_repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
+            repo_line = f"deb [arch={arch}] {base_url} {release}{suffix} {components}"
+            src_repo_line = f"deb-src [arch={arch}] {base_url} {release}{suffix} {components}"
+            command = f"echo '{repo_line}' >> {sources_list_path}; echo '{src_repo_line}' >> {sources_list_path}"
+            run_command(command, as_root=True, print_cmd=True)
 
-        repo_line = f'deb [arch={arch}] {canonical_base_url} {release} {partner_section}'
-        src_repo_line = f'deb-src [arch={arch}] {canonical_base_url} {release} {partner_section}'
-        run_command(['echo', repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
-        run_command(['echo', src_repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
+        # Canonical partner repository
+        repo_line = f"deb [arch={arch}] {canonical_base_url} {release} {partner_section}"
+        src_repo_line = f"deb-src [arch={arch}] {canonical_base_url} {release} {partner_section}"
+        command = f"echo '{repo_line}' >> {sources_list_path}; echo '{src_repo_line}' >> {sources_list_path}"
+        run_command(command, as_root=True, print_cmd=True)
 
     print(f"Ubuntu ports for {', '.join(architectures)} added to {sources_list_path}")
 
@@ -321,11 +321,11 @@ def install_arm_support_libraries(gha_build=False):
             run_command(['apt', 'update'], as_root=True, check=True)
             run_command(['apt', 'install'] + packages, as_root=True, check=True)
 
-            if gha_build:
-                # Additional configurations or package removals specific to GitHub Actions
-                remove_packages = []  # specify packages that might conflict
-                if remove_packages:
-                    run_command(['apt', 'remove'] + remove_packages, as_root=True, check=True)
+            # if gha_build:
+            #     # Additional configurations or package removals specific to GitHub Actions
+            #     remove_packages = []  # specify packages that might conflict
+            #     if remove_packages:
+            #         run_command(['apt', 'remove'] + remove_packages, as_root=True, check=True)
 
             # Check if the packages were installed
             with open(os.devnull, "w") as devnull:
