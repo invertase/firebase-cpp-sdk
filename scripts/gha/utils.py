@@ -276,37 +276,32 @@ def install_arm_support_libraries(gha_build=False):
                  downgrading Ubuntu packages).
     """
     if is_linux_os():
-        # Packages for both ARM32 and ARM64
-        packages_arm32 = ['gcc-arm-linux-gnueabihf', 'g++-arm-linux-gnueabihf',
-                          'libglib2.0-dev:armhf', 'libsecret-1-dev:armhf',
-                          'libpthread-stubs0-dev:armhf', 'libssl-dev:armhf',
-                          'libsecret-1-0:armhf']
-        packages_arm64 = ['gcc-aarch64-linux-gnu', 'g++-aarch64-linux-gnu',
-                          'libglib2.0-dev:arm64', 'libsecret-1-dev:arm64',
-                          'libpthread-stubs0-dev:arm64', 'libssl-dev:arm64',
-                          'libsecret-1-0:arm64']
-        packages = packages_arm32 + packages_arm64
-        remove_packages = []
+        packages = [
+            'g++-aarch64-linux-gnu', 'gcc-aarch64-linux-gnu', 'libc6-dev-arm64-cross',
+            'g++-arm-linux-gnueabihf', 'gcc-arm-linux-gnueabihf', 'libc6-dev-armhf-cross',
+            'libglib2.0-dev:arm64', 'libglib2.0-dev:armhf',
+            'libpthread-stubs0-dev:arm64', 'libpthread-stubs0-dev:armhf',
+            'libsecret-1-dev:arm64', 'libsecret-1-dev:armhf',
+            'libssl-dev:arm64', 'libssl-dev:armhf'
+        ]
 
-        # Check if these packages exist on the machine already
+        # First check if these packages exist on the machine already
         with open(os.devnull, "w") as devnull:
-            process = subprocess.run(["dpkg", "-s"] + packages, stdout=devnull,
-                                     stderr=subprocess.STDOUT)
+            process = subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT)
 
         if process.returncode != 0:
-            # Not all required packages are installed. Proceed to install them.
-            run_command(['dpkg', '--add-architecture', 'armhf'], as_root=True, check=True)
-            run_command(['dpkg', '--add-architecture', 'arm64'], as_root=True, check=True)
+            # This implies not all of the required packages are already installed on
+            # user's machine. Install them.
+            run_command(['dpkg', '--add-architecture', 'arm64', 'armhf'], as_root=True, check=True)
             run_command(['apt', 'update'], as_root=True, check=True)
-            run_command(['apt', 'install', 'aptitude'], as_root=True, check=True)
+            run_command(['apt', 'install'] + packages, as_root=True, check=True)
+
             if gha_build:
-                # Handle specific GitHub runner workarounds.
-                remove_packages = ['libpcre3-dev:amd64', 'libpcre3:amd64']
+                # Additional configurations or package removals specific to GitHub Actions
+                remove_packages = []  # specify packages that might conflict
+                if remove_packages:
+                    run_command(['apt', 'remove'] + remove_packages, as_root=True, check=True)
 
-            # Install or remove packages as necessary.
-            run_command(['aptitude', 'install', '-V', '-y'] + packages +
-                        ['%s-' % pkg for pkg in remove_packages], as_root=True, check=True)
-
-            # Verify package installation
+            # Check if the packages were installed
             with open(os.devnull, "w") as devnull:
                 subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT, check=True)

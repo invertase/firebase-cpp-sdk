@@ -12,10 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Toolchain file for building ARM32 libraries
+# Toolchain file for building ARMv7 applications
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a")
+# Set compiler and linker flags for ARMv7
+set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
+set(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a -m32")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a -m32")
+
+# Define the root path for the target libraries and includes
+set(CMAKE_FIND_ROOT_PATH "/usr/arm-linux-gnueabihf")
+
+# Set the library and include paths
 set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf")
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} "/usr/include/arm-linux-gnueabihf")
+
+# Adjust PKG_CONFIG_PATH for cross-compilation
 set(ENV{PKG_CONFIG_PATH} "/usr/lib/arm-linux-gnueabihf/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+
+# Adjust the default behavior of the FIND_XXX() commands:
+# Only search for libraries and headers in the target environment
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
