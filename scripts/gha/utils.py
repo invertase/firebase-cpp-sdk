@@ -303,6 +303,7 @@ def install_arm_support_libraries(gha_build=False):
     """
     if is_linux_os():
         add_ubuntu_ports()
+        run_command(['apt', 'update'], as_root=True, check=True)
         packages = [
             'g++-aarch64-linux-gnu', 'gcc-aarch64-linux-gnu', 'libc6-dev-arm64-cross',
             'g++-arm-linux-gnueabihf', 'gcc-arm-linux-gnueabihf', 'libc6-dev-armhf-cross',
