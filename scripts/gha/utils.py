@@ -274,30 +274,21 @@ def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
     components = "main restricted universe multiverse"
     sections = ["", "updates", "backports", "security"]
     partner_section = "partner"
-
-    # Path to the sources list file
     sources_list_path = "/etc/apt/sources.list.d/ubuntu-ports.list"
+    for arch in architectures:
+        for section in sections:
+            suffix = f" {section}".strip()
+            repo_line = f'deb [arch={arch}] {base_url} {release}{suffix} {components}'
+            src_repo_line = f'deb-src [arch={arch}] {base_url} {release}{suffix} {components}'
+            run_command(['echo', repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
+            run_command(['echo', src_repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
 
-    try:
-        with open(sources_list_path, 'a') as file:
-            for arch in architectures:
-                # Add entries for main, updates, backports, and security
-                for section in sections:
-                    suffix = f" {section}".strip()
-                    repo_line = f"deb [arch={arch}] {base_url} {release}{suffix} {components}\n"
-                    src_repo_line = f"deb-src [arch={arch}] {base_url} {release}{suffix} {components}\n"
-                    file.write(repo_line)
-                    file.write(src_repo_line)
+        repo_line = f'deb [arch={arch}] {canonical_base_url} {release} {partner_section}'
+        src_repo_line = f'deb-src [arch={arch}] {canonical_base_url} {release} {partner_section}'
+        run_command(['echo', repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
+        run_command(['echo', src_repo_line, '>>', sources_list_path], as_root=True, print_cmd=True)
 
-                # Add entries for Canonical partner repository
-                repo_line = f"deb [arch={arch}] {canonical_base_url} {release} {partner_section}\n"
-                src_repo_line = f"deb-src [arch={arch}] {canonical_base_url} {release} {partner_section}\n"
-                file.write(repo_line)
-                file.write(src_repo_line)
-
-        print(f"Ubuntu ports for {', '.join(architectures)} added to {sources_list_path}")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
+    print(f"Ubuntu ports for {', '.join(architectures)} added to {sources_list_path}")
 
 def install_arm_support_libraries(gha_build=False):
     """Install support libraries needed to build ARM32 and ARM64 on x86_64 hosts.
@@ -308,6 +299,7 @@ def install_arm_support_libraries(gha_build=False):
                  downgrading Ubuntu packages).
     """
     if is_linux_os():
+        add_ubuntu_ports()
         packages = [
             'g++-aarch64-linux-gnu', 'gcc-aarch64-linux-gnu', 'libc6-dev-arm64-cross',
             'g++-arm-linux-gnueabihf', 'gcc-arm-linux-gnueabihf', 'libc6-dev-armhf-cross',
@@ -324,9 +316,8 @@ def install_arm_support_libraries(gha_build=False):
         if process.returncode != 0:
             # This implies not all of the required packages are already installed on
             # user's machine. Install them.
-            add_ubuntu_ports()
             run_command(['dpkg', '--add-architecture', 'armhf'], as_root=True, check=True)
-            run_command(['dpkg', '--add-architecture', 'aarch64'], as_root=True, check=True)
+            run_command(['dpkg', '--add-architecture', 'arm64'], as_root=True, check=True)
             run_command(['apt', 'update'], as_root=True, check=True)
             run_command(['apt', 'install'] + packages, as_root=True, check=True)
 
