@@ -292,7 +292,8 @@ def install_arm_support_libraries(gha_build=False):
         if process.returncode != 0:
             # This implies not all of the required packages are already installed on
             # user's machine. Install them.
-            run_command(['dpkg', '--add-architecture', 'arm64', 'armhf'], as_root=True, check=True)
+            run_command(['dpkg', '--add-architecture', 'armhf'], as_root=True, check=True)
+            run_command(['dpkg', '--add-architecture', 'aarch64'], as_root=True, check=True)
             run_command(['apt', 'update'], as_root=True, check=True)
             run_command(['apt', 'install'] + packages, as_root=True, check=True)
 
