@@ -50,8 +50,7 @@ def run_command(cmd, capture_output=False, cwd=None, check=False, as_root=False,
  """
 
  if as_root and (is_mac_os() or is_linux_os()):
-      command_str = ' '.join(cmd) if isinstance(cmd, list) else cmd
-      cmd = ['sudo', 'bash', '-c', command_str]
+      cmd.insert(0, 'sudo')
 
  cmd_string = ' '.join(cmd)
  if print_cmd:
@@ -267,68 +266,3 @@ def install_x86_support_libraries(gha_build=False):
       with open(os.devnull, "w") as devnull:
         subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT,
                        check=True)
-
-def add_ubuntu_ports(architectures=['arm64', 'armhf'], release='focal'):
-    base_url = "http://ports.ubuntu.com/ubuntu-ports"
-    canonical_base_url = "http://archive.canonical.com/ubuntu"
-    components = "main restricted universe multiverse"
-    sections = ["", "updates", "backports", "security"]
-    partner_section = "partner"
-    sources_list_path = "/etc/apt/sources.list.d/ubuntu-ports.list"
-    run_command(f"echo '' > {sources_list_path}", as_root=True, print_cmd=True)
-    for arch in architectures:
-        for section in sections:
-            suffix = f"-{section}" if section else ""
-            repo_line = f'deb [arch={arch}] {base_url} {release}{suffix} {components}'
-            src_repo_line = f'deb-src [arch={arch}] {base_url} {release}{suffix} {components}'
-            command = f"echo '{repo_line}' >> {sources_list_path}; echo '{src_repo_line}' >> {sources_list_path}"
-            run_command(command, as_root=True, print_cmd=True)
-
-        repo_line = f"deb [arch={arch}] {canonical_base_url} {release} {partner_section}"
-        src_repo_line = f"deb-src [arch={arch}] {canonical_base_url} {release} {partner_section}"
-        command = f"echo '{repo_line}' >> {sources_list_path}; echo '{src_repo_line}' >> {sources_list_path}"
-        run_command(command, as_root=True, print_cmd=True)
-
-    print(f"Ubuntu ports for {', '.join(architectures)} added to {sources_list_path}")
-
-def install_arm_support_libraries(gha_build=False):
-    """Install support libraries needed to build ARM32 and ARM64 on x86_64 hosts.
-
-    Args:
-      gha_build: Pass in True if running on a GitHub runner; this will activate
-                 workarounds that might be undesirable on a personal system (e.g.,
-                 downgrading Ubuntu packages).
-    """
-    return
-    if is_linux_os():
-        run_command(['apt', 'update'], as_root=True, check=True)
-        packages = [
-            'g++-aarch64-linux-gnu', 'gcc-aarch64-linux-gnu', 
-            'g++-arm-linux-gnueabihf', 'gcc-arm-linux-gnueabihf',
-            'libglib2.0-dev:arm64', 'libglib2.0-dev:armhf',
-            'libpthread-stubs0-dev:arm64', 'libpthread-stubs0-dev:armhf',
-            'libsecret-1-dev:arm64', 'libsecret-1-dev:armhf',
-            'libssl-dev:arm64', 'libssl-dev:armhf'
-        ]
-
-        # First check if these packages exist on the machine already
-        with open(os.devnull, "w") as devnull:
-            process = subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT)
-
-        if process.returncode != 0:
-            # This implies not all of the required packages are already installed on
-            # user's machine. Install them.
-            run_command(['dpkg', '--add-architecture', 'armhf'], as_root=True, check=True)
-            run_command(['dpkg', '--add-architecture', 'arm64'], as_root=True, check=True)
-            run_command(['apt', 'update'], as_root=True, check=True)
-            run_command(['apt', 'install'] + packages, as_root=True, check=True)
-
-            # if gha_build:
-            #     # Additional configurations or package removals specific to GitHub Actions
-            #     remove_packages = []  # specify packages that might conflict
-            #     if remove_packages:
-            #         run_command(['apt', 'remove'] + remove_packages, as_root=True, check=True)
-
-            # Check if the packages were installed
-            with open(os.devnull, "w") as devnull:
-                subprocess.run(["dpkg", "-s"] + packages, stdout=devnull, stderr=subprocess.STDOUT, check=True)
