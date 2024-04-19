@@ -13,17 +13,14 @@
 # limitations under the License.
 
 # Toolchain file for building ARMv7 applications
-# set(CMAKE_SYSTEM_NAME Linux)
-# set(CMAKE_SYSTEM_PROCESSOR arm)
-# set(CMAKE_CROSSCOMPILING ON)
 # set(CMAKE_C_SIZEOF_DATA_PTR 4)
 # set(CMAKE_CXX_SIZEOF_DATA_PTR 4)
-# set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
-# set(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
+set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
+set(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
 
 # Set compiler and linker flags for ARMv7
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a+fp")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp")
 
 # Set the library and include paths
 set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf")
