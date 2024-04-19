@@ -175,6 +175,12 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
     if utils.is_linux_os() and arch == 'x86':
       toolchain_file_path = os.path.join(os.getcwd(), 'cmake', 'toolchains', 'linux_32.cmake')
       cmd.append('-DCMAKE_TOOLCHAIN_FILE={0}'.format(toolchain_file_path))
+    elif utils.is_linux_os() and arch == 'arm64':
+      toolchain_file_path = os.path.join(os.getcwd(), 'cmake', 'toolchains', 'linux_arm64.cmake')
+      cmd.append('-DCMAKE_TOOLCHAIN_FILE={0}'.format(toolchain_file_path))
+    elif utils.is_linux_os() and arch == 'arm32':
+      toolchain_file_path = os.path.join(os.getcwd(), 'cmake', 'toolchains', 'linux_arm32.cmake')
+      cmd.append('-DCMAKE_TOOLCHAIN_FILE={0}'.format(toolchain_file_path))
   else: # not disable_vcpkg - therefore vcpkg is enabled
     if utils.is_linux_os() and arch == 'x86':
       # Use a separate cmake toolchain for cross compiling linux x86 builds
@@ -274,7 +280,7 @@ def main():
 
 def parse_cmdline_args():
   parser = argparse.ArgumentParser(description='Install Prerequisites for building cpp sdk')
-  parser.add_argument('-a', '--arch', default='x64', help='Platform architecture (x64, x86, arm64)')
+  parser.add_argument('-a', '--arch', default='x64', help='Platform architecture (x64, x86, arm64, arm32)')
   parser.add_argument('--msvc_runtime_library', default='static',
                       help='Runtime library for MSVC (static(/MT) or dynamic(/MD)')
   parser.add_argument('--linux_abi', default='legacy',
