@@ -17,8 +17,8 @@ set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
 set(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
 
 # Set compiler and linker flags for ARMv7
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a -m32")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a -m32")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a")
 
 # Set the library and include paths
 set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf")
