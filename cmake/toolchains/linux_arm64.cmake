@@ -15,14 +15,14 @@
 # Toolchain file for building ARM64 applications
 
 # Set compiler and linker flags for ARM64
-set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
-set(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
+# set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
+# set(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a")
 
 # Define the root path for the target libraries and includes
-set(CMAKE_FIND_ROOT_PATH "/usr/aarch64-linux-gnu")
+# set(CMAKE_FIND_ROOT_PATH "/usr/aarch64-linux-gnu")
 
 # Set the library and include paths
 set(CMAKE_LIBRARY_PATH "/usr/lib/aarch64-linux-gnu")
@@ -33,6 +33,6 @@ set(ENV{PKG_CONFIG_PATH} "/usr/lib/aarch64-linux-gnu/pkgconfig:$ENV{PKG_CONFIG_P
 
 # Adjust the default behavior of the FIND_XXX() commands:
 # Only search for libraries and headers in the target environment
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+# set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+# set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
