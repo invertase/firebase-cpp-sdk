@@ -122,8 +122,6 @@ def main():
   if args.arch == 'x86':
     utils.install_x86_support_libraries(args.gha_build)
 
-  if args.arch == 'arm32' or args.arch == 'arm64':
-    utils.install_arm_support_libraries(args.gha_build)
 
 def parse_cmdline_args():
   parser = argparse.ArgumentParser(description='Install prerequisites for building cpp sdk')
