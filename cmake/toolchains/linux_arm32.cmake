@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # Toolchain file for building ARMv7 applications
-# set(CMAKE_C_SIZEOF_DATA_PTR 4)
-# set(CMAKE_CXX_SIZEOF_DATA_PTR 4)
 set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
 set(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
 
