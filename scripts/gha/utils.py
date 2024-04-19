@@ -302,8 +302,8 @@ def install_arm_support_libraries(gha_build=False):
     if is_linux_os():
         run_command(['apt', 'update'], as_root=True, check=True)
         packages = [
-            'g++-aarch64-linux-gnu', 'gcc-aarch64-linux-gnu', 'libc6-dev-arm64-cross',
-            'g++-arm-linux-gnueabihf', 'gcc-arm-linux-gnueabihf', 'libc6-dev-armhf-cross',
+            'g++-aarch64-linux-gnu', 'gcc-aarch64-linux-gnu', 
+            'g++-arm-linux-gnueabihf', 'gcc-arm-linux-gnueabihf',
             'libglib2.0-dev:arm64', 'libglib2.0-dev:armhf',
             'libpthread-stubs0-dev:arm64', 'libpthread-stubs0-dev:armhf',
             'libsecret-1-dev:arm64', 'libsecret-1-dev:armhf',
