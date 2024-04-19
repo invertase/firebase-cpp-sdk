@@ -50,7 +50,7 @@ def run_command(cmd, capture_output=False, cwd=None, check=False, as_root=False,
  """
 
  if as_root and (is_mac_os() or is_linux_os()):
-    cmd.insert(0, 'sudo')
+  cmd.insert(0, 'sudo')
 
  cmd_string = ' '.join(cmd)
  if print_cmd:
