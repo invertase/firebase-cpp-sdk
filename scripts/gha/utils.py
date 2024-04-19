@@ -299,6 +299,7 @@ def install_arm_support_libraries(gha_build=False):
                  workarounds that might be undesirable on a personal system (e.g.,
                  downgrading Ubuntu packages).
     """
+    return
     if is_linux_os():
         run_command(['apt', 'update'], as_root=True, check=True)
         packages = [
