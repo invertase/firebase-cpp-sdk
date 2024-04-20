@@ -301,7 +301,7 @@ jobs:
   build_desktop:
     name: build-${{ matrix.sdk_platform }}-${{ matrix.architecture }}-${{ matrix.build_type }}-${{ matrix.msvc_runtime }}-${{ matrix.linux_abi }}
     runs-on: 
-      labels: ${{ (startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm')) && 'arm64-runner' || matrix.os }}
+      labels: ${{ (startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm')) && 'arm64' || matrix.os }}
     if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
     strategy:
       fail-fast: false
