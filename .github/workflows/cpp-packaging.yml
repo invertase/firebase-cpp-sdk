@@ -424,12 +424,12 @@ jobs:
       
       # Run the build in the host OS default shell since Windows can't handle long path names in bash.
       - name: Build desktop SDK
-        # if: ${{ !(startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm')) }}
+        if: ${{ !(startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm32')) }}
         run: |
           python scripts/gha/build_desktop.py --arch "${{ matrix.architecture }}" --config "${{ matrix.build_type }}" --msvc_runtime_library "${{ matrix.msvc_runtime }}" --linux_abi "${{ matrix.linux_abi }}" --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} --gha_build
 
-      - name: Build desktop SDK (${{ matrix.architecture }})
-        if: ${{ startsWith(matrix.os, 'IGNOREubuntu') && startsWith(matrix.architecture, 'arm') }}
+      - name: Build desktop SDK (arm32)
+        if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm32') }}
         uses: uraimo/run-on-arch-action@v2
         with:
           arch: ${{ matrix.architecture == 'arm32' && 'armv7' || 'aarch64' }}
