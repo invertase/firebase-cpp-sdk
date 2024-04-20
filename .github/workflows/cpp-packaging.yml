@@ -307,7 +307,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-20.04, macos-13]
         build_type: ["Release", "Debug"]
-        architecture: ["x64", "x86", "arm64"]
+        architecture: ["x64", "x86", "arm64", "arm32"]
         msvc_runtime: ["static", "dynamic"]
         linux_abi: ["legacy", "c++11"]
         python_version: [3.8]
@@ -341,14 +341,16 @@ jobs:
           linux_abi: "c++11"
         - os: macos-13
           build_type: "Debug"
+        - os: macos-13
+          architecture: "arm32"
         - os: ubuntu-20.04
           msvc_runtime: "dynamic"
         - os: ubuntu-20.04
           build_type: "Debug"
-        - os: ubuntu-20.04
-          architecture: "arm64"
         - os: windows-latest
           architecture: "arm64"
+        - os: windows-latest
+          architecture: "arm32"
 
     steps:
       - name: Store git credentials for all git commands
@@ -420,8 +422,42 @@ jobs:
       
       # Run the build in the host OS default shell since Windows can't handle long path names in bash.
       - name: Build desktop SDK
+        # We'll handle linux arm32 and arm64 builds in a separate step.
+        if: ${{ !(startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm')) }}
         run: |
           python scripts/gha/build_desktop.py --arch "${{ matrix.architecture }}" --config "${{ matrix.build_type }}" --msvc_runtime_library "${{ matrix.msvc_runtime }}" --linux_abi "${{ matrix.linux_abi }}" --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} --gha_build
+
+      - name: Build desktop SDK (arm)
+        if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm') }}
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: ${{ matrix.architecture == 'arm32' && 'armv7' || 'aarch64' }}
+          distro: bookworm
+          githubToken: ${{ github.token }}
+          dockerRunArgs: |
+            --volume "${{ github.workspace }}:/firebase-cpp-sdk" -e SDK_NAME -e VERBOSE_FLAG
+          install: |
+            apt-get update && apt-get install -y sudo
+            sudo apt-get update && apt-get install -y \
+              git \
+              python3 \
+              python3-pip \
+              cmake \
+              libsecret-1-dev \
+              libpthread-stubs0-dev \
+              libssl-dev \
+              libsecret-1-0 \
+              libglib2.0-dev
+            if [[ '${{ matrix.architecture }}' == 'arm32' ]]; then
+              sudo apt-get install -y \
+                gcc-arm-linux-gnueabihf \
+                g++-arm-linux-gnueabihf
+            fi
+          run: |
+            cd /firebase-cpp-sdk
+            python3 scripts/gha/install_prereqs_desktop.py --gha_build --arch '${{ matrix.architecture }}' --ssl boringssl
+            python3 -m pip install -r external/pip_requirements.txt --user --break-system-packages
+            python3 scripts/gha/build_desktop.py --arch "${{ matrix.architecture }}" --config "${{ matrix.build_type }}" --msvc_runtime_library "${{ matrix.msvc_runtime }}" --linux_abi "${{ matrix.linux_abi }}" --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} --gha_build
 
       - name: Archive SDK
         shell: bash
