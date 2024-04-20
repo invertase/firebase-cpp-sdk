@@ -13,10 +13,6 @@
 # limitations under the License.
 
 # Toolchain file for building ARMv7 applications
-set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
-set(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
-
-# Set compiler and linker flags for ARMv7
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a+fp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp")
 

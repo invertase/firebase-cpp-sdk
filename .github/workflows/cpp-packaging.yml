@@ -422,12 +422,11 @@ jobs:
       
       # Run the build in the host OS default shell since Windows can't handle long path names in bash.
       - name: Build desktop SDK
-        # We'll handle linux arm32 and arm64 builds in a separate step.
         if: ${{ !(startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm')) }}
         run: |
           python scripts/gha/build_desktop.py --arch "${{ matrix.architecture }}" --config "${{ matrix.build_type }}" --msvc_runtime_library "${{ matrix.msvc_runtime }}" --linux_abi "${{ matrix.linux_abi }}" --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} --gha_build
 
-      - name: Build desktop SDK (arm)
+      - name: Build desktop SDK (${{ matrix.architecture }})
         if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm') }}
         uses: uraimo/run-on-arch-action@v2
         with:
@@ -448,11 +447,6 @@ jobs:
               libssl-dev \
               libsecret-1-0 \
               libglib2.0-dev
-            if [[ '${{ matrix.architecture }}' == 'arm32' ]]; then
-              sudo apt-get install -y \
-                gcc-arm-linux-gnueabihf \
-                g++-arm-linux-gnueabihf
-            fi
           run: |
             cd /firebase-cpp-sdk
             python3 scripts/gha/install_prereqs_desktop.py --gha_build --arch '${{ matrix.architecture }}' --ssl boringssl
