@@ -354,6 +354,7 @@ jobs:
 
     steps:
       - name: Store git credentials for all git commands
+        if: ${{ !(startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm')) }}
         # Forces all git commands to use authenticated https, to prevent throttling.
         shell: bash
         run: |
