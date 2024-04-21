@@ -434,7 +434,7 @@ jobs:
         with:
           image: arm32v7/debian:latest
           options: |
-            --platform=linux/arm32/v7 --volume "${{ github.workspace }}:/firebase-cpp-sdk" -e SDK_NAME -e VERBOSE_FLAG
+            --platform=linux/arm/v7 --volume "${{ github.workspace }}:/firebase-cpp-sdk" -e SDK_NAME -e VERBOSE_FLAG
           run: |
             apt-get update && apt-get install -y sudo
             sudo apt-get update && apt-get install -y \
