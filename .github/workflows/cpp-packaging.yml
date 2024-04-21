@@ -452,6 +452,12 @@ jobs:
             python3 -m pip install -r external/pip_requirements.txt --user --break-system-packages
             python3 scripts/gha/build_desktop.py --arch "${{ matrix.architecture }}" --config "${{ matrix.build_type }}" --msvc_runtime_library "${{ matrix.msvc_runtime }}" --linux_abi "${{ matrix.linux_abi }}" --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} --gha_build
 
+      - name: Fix permissions
+        if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm32') }}
+        shell: bash
+        run: |
+          sudo chown -R $(id -u):$(id -g) out-sdk
+
       - name: Archive SDK
         shell: bash
         run: |
