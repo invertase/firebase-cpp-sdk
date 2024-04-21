@@ -430,14 +430,12 @@ jobs:
 
       - name: Build desktop SDK (arm32)
         if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(matrix.architecture, 'arm32') }}
-        uses: uraimo/run-on-arch-action@v2
+        uses: addnab/docker-run-action@v3
         with:
-          arch: ${{ matrix.architecture == 'arm32' && 'armv7' || 'aarch64' }}
-          distro: bookworm
-          githubToken: ${{ github.token }}
-          dockerRunArgs: |
-            --volume "${{ github.workspace }}:/firebase-cpp-sdk" -e SDK_NAME -e VERBOSE_FLAG
-          install: |
+          image: arm32v7/debian:latest
+          options: |
+            --platform=linux/arm32/v7 --volume "${{ github.workspace }}:/firebase-cpp-sdk" -e SDK_NAME -e VERBOSE_FLAG
+          run: |
             apt-get update && apt-get install -y sudo
             sudo apt-get update && apt-get install -y \
               git \
@@ -449,7 +447,6 @@ jobs:
               libssl-dev \
               libsecret-1-0 \
               libglib2.0-dev
-          run: |
             cd /firebase-cpp-sdk
             python3 scripts/gha/install_prereqs_desktop.py --gha_build --arch '${{ matrix.architecture }}' --ssl boringssl
             python3 -m pip install -r external/pip_requirements.txt --user --break-system-packages
