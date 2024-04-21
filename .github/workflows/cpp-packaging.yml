@@ -837,7 +837,49 @@ jobs:
         with:
           name: firebase_cpp_sdk_windows.zip
           path: firebase_cpp_sdk_windows.zip
-        
+  create_linux_only_package:
+    name: create-linux-only-package
+    runs-on: ubuntu-20.04
+    needs: [merge_packages]
+    steps:
+      - name: download SDK zip
+        uses: actions/download-artifact@v3
+        with:
+          name: firebase_cpp_sdk.zip
+      - name: unzip SDK and remove non-Linux files
+        run: |
+          set -x
+          unzip -q firebase_cpp_sdk.zip -d linux-sdk
+          cd linux-sdk
+          # Rename the top-level directory.
+          mv firebase_cpp_sdk firebase_cpp_sdk_linux
+          cd firebase_cpp_sdk_linux
+          # Remove all non-Linux files.
+          rm -rf xcframeworks frameworks libs/windows libs/ios libs/tvos libs/darwin libs/android Android
+          cat > readme_linux.md <<EOF
+          # Firebase C++ SDK - Linux only
+
+          This package contains only the subset of the Firebase C++ SDK needed for use on
+          Linux. For general SDK information, see the accompanying readme.md file.
+          EOF
+          cd ..
+          zip -9 -r -y ../firebase_cpp_sdk_linux.zip firebase_cpp_sdk_linux
+          cd ..
+      - name: compute Linux SDK hash
+        shell: bash
+        run: |
+          ${{ env.hashCommand }} --tag firebase_cpp_sdk_linux.zip > firebase_cpp_sdk_linux_hash.txt
+          echo "::warning ::$(cat firebase_cpp_sdk_linux_hash.txt)"
+      - name: upload Linux hash
+        uses: actions/upload-artifact@v3
+        with:
+          name: firebase_cpp_sdk_linux_hash.txt
+          path: firebase_cpp_sdk_linux_hash.txt
+      - name: upload Linux SDK zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: firebase_cpp_sdk_linux.zip
+          path: firebase_cpp_sdk_linux.zip       
 
   cleanup_packaging_artifacts:
     # Clean up intermediate artifacts from packaging step.
@@ -862,7 +904,7 @@ jobs:
 
   trigger_integration_tests:
     # Trigger the integration_tests workflow.
-    needs: [merge_packages, download_sdk_package, create_windows_only_package, cleanup_packaging_artifacts]
+    needs: [merge_packages, download_sdk_package, create_windows_only_package, create_linux_only_package, cleanup_packaging_artifacts]
     if: (github.event.inputs.skipIntegrationTests == 0 || github.event.inputs.skipIntegrationTests == '') && !cancelled() && !failure()
     runs-on: ubuntu-20.04
     steps:

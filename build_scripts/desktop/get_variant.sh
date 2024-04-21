@@ -75,6 +75,9 @@ for c in $(echo "${filename}" | tr "[:upper:]" "[:lower:]" | tr "_.-" "\n\n\n");
 	arm64)
 	    arch=arm64
 	;;
+	arm32)
+	    arch=armv7
+	;;
 	armv7)
 	    arch=armv7
 	;;
@@ -166,6 +169,9 @@ case ${os} in
 	    echo "Couldn't determine architecture" 1>&2
 	    exit 1
 	fi
+  if [[ "${arch}" == "arm64" ]]; then
+    arch=aarch64
+  fi
 	echo -n "${arch}/${linux_abi}"
     ;;
     windows)
