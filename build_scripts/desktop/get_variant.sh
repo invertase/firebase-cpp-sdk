@@ -169,9 +169,9 @@ case ${os} in
 	    echo "Couldn't determine architecture" 1>&2
 	    exit 1
 	fi
-  if [[ "${arch}" == "arm64" ]]; then
-    arch=aarch64
-  fi
+	if [[ "${arch}" == "arm64" ]]; then
+	    arch=aarch64
+	fi
 	echo -n "${arch}/${linux_abi}"
     ;;
     windows)
