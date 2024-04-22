@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # Toolchain file for building ARMv7 applications
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a+fp")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a+fp -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp -fPIC")
 
 # Set the library and include paths
 set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf")

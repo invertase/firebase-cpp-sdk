@@ -175,6 +175,9 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
     if utils.is_linux_os() and arch == 'x86':
       toolchain_file_path = os.path.join(os.getcwd(), 'cmake', 'toolchains', 'linux_32.cmake')
       cmd.append('-DCMAKE_TOOLCHAIN_FILE={0}'.format(toolchain_file_path))
+    elif utils.is_linux_os() and arch == 'x64':
+      toolchain_file_path = os.path.join(os.getcwd(), 'cmake', 'toolchains', 'linux_64.cmake')
+      cmd.append('-DCMAKE_TOOLCHAIN_FILE={0}'.format(toolchain_file_path))
     elif utils.is_linux_os() and arch == 'arm64':
       toolchain_file_path = os.path.join(os.getcwd(), 'cmake', 'toolchains', 'linux_arm64.cmake')
       cmd.append('-DCMAKE_TOOLCHAIN_FILE={0}'.format(toolchain_file_path))
