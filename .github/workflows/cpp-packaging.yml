@@ -186,120 +186,120 @@ jobs:
           name: packaging-tools-${{ matrix.tools_platform }}
           path: packaging-tools.tgz
 
-  build_and_package_ios_tvos:
-    name: build-and-package-ios-tvos
-    runs-on: macos-13-large
-    if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
-    steps:
-      - name: Store git credentials for all git commands
-        # Forces all git commands to use authenticated https, to prevent throttling.
-        shell: bash
-        run: |
-          git config --global credential.helper 'store --file /tmp/git-credentials'
-          echo 'https://${{ github.token }}@github.com' > /tmp/git-credentials
+  # build_and_package_ios_tvos:
+  #   name: build-and-package-ios-tvos
+  #   runs-on: macos-13-large
+  #   if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
+  #   steps:
+  #     - name: Store git credentials for all git commands
+  #       # Forces all git commands to use authenticated https, to prevent throttling.
+  #       shell: bash
+  #       run: |
+  #         git config --global credential.helper 'store --file /tmp/git-credentials'
+  #         echo 'https://${{ github.token }}@github.com' > /tmp/git-credentials
 
-      - name: setup Xcode version (macos)
-        if: runner.os == 'macOS'
-        run: sudo xcode-select -s /Applications/Xcode_${{ env.xcodeVersion }}.app/Contents/Developer
+  #     - name: setup Xcode version (macos)
+  #       if: runner.os == 'macOS'
+  #       run: sudo xcode-select -s /Applications/Xcode_${{ env.xcodeVersion }}.app/Contents/Developer
 
-      - name: fetch SDK
-        uses: actions/checkout@v3
-        with:
-          path: sdk-src
+  #     - name: fetch SDK
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: sdk-src
 
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
+  #     - name: Setup python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: 3.8
 
-      - name: install prerequisites
-        run: sdk-src/build_scripts/ios/install_prereqs.sh
+  #     - name: install prerequisites
+  #       run: sdk-src/build_scripts/ios/install_prereqs.sh
 
-      - name: build sdk
-        run: |
-          python sdk-src/scripts/gha/build_ios_tvos.py -b firebase-cpp-sdk-ios-tvos-build -s sdk-src
-          sdk-src/build_scripts/ios/package.sh firebase-cpp-sdk-ios-tvos-build firebase-cpp-sdk-ios-tvos-package
-          sdk-src/build_scripts/tvos/package.sh firebase-cpp-sdk-ios-tvos-build firebase-cpp-sdk-ios-tvos-package
-          cd firebase-cpp-sdk-ios-tvos-package
-          tar -czhf ../firebase-cpp-sdk-ios-tvos-package.tgz .
+  #     - name: build sdk
+  #       run: |
+  #         python sdk-src/scripts/gha/build_ios_tvos.py -b firebase-cpp-sdk-ios-tvos-build -s sdk-src
+  #         sdk-src/build_scripts/ios/package.sh firebase-cpp-sdk-ios-tvos-build firebase-cpp-sdk-ios-tvos-package
+  #         sdk-src/build_scripts/tvos/package.sh firebase-cpp-sdk-ios-tvos-build firebase-cpp-sdk-ios-tvos-package
+  #         cd firebase-cpp-sdk-ios-tvos-package
+  #         tar -czhf ../firebase-cpp-sdk-ios-tvos-package.tgz .
 
-      - name: Print built libraries
-        shell: bash
-        run: |
-          find firebase-cpp-sdk-*-build -name "*.lib"
-          find firebase-cpp-sdk-*-build -name "*.dll"
-          find firebase-cpp-sdk-*-build -name "*.dylib"
-          find firebase-cpp-sdk-*-build -name "*.a"
-          find firebase-cpp-sdk-*-build -name "*.so"
-          find firebase-cpp-sdk-*-build -name "*.framework"
+  #     - name: Print built libraries
+  #       shell: bash
+  #       run: |
+  #         find firebase-cpp-sdk-*-build -name "*.lib"
+  #         find firebase-cpp-sdk-*-build -name "*.dll"
+  #         find firebase-cpp-sdk-*-build -name "*.dylib"
+  #         find firebase-cpp-sdk-*-build -name "*.a"
+  #         find firebase-cpp-sdk-*-build -name "*.so"
+  #         find firebase-cpp-sdk-*-build -name "*.framework"
 
-      - name: Print package contents
-        shell: bash
-        run: |
-          find firebase-cpp-sdk-*-package -type f
+  #     - name: Print package contents
+  #       shell: bash
+  #       run: |
+  #         find firebase-cpp-sdk-*-package -type f
 
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: firebase-cpp-sdk-ios-tvos-package
-          path: firebase-cpp-sdk-ios-tvos-package.tgz
+  #     - name: upload artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: firebase-cpp-sdk-ios-tvos-package
+  #         path: firebase-cpp-sdk-ios-tvos-package.tgz
 
-  build_and_package_android:
-    name: build-and-package-android
-    runs-on: ubuntu-20-xl
-    if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
-    strategy:
-      fail-fast: false
-    steps:
-      - name: fetch SDK
-        uses: actions/checkout@v3
-        with:
-          path: sdk-src
+  # build_and_package_android:
+  #   name: build-and-package-android
+  #   runs-on: ubuntu-20-xl
+  #   if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
+  #   strategy:
+  #     fail-fast: false
+  #   steps:
+  #     - name: fetch SDK
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: sdk-src
 
-      - name: Store git credentials for all git commands
-        # Forces all git commands to use authenticated https, to prevent throttling.
-        shell: bash
-        run: |
-          git config --global credential.helper 'store --file /tmp/git-credentials'
-          echo 'https://${{ github.token }}@github.com' > /tmp/git-credentials
+  #     - name: Store git credentials for all git commands
+  #       # Forces all git commands to use authenticated https, to prevent throttling.
+  #       shell: bash
+  #       run: |
+  #         git config --global credential.helper 'store --file /tmp/git-credentials'
+  #         echo 'https://${{ github.token }}@github.com' > /tmp/git-credentials
 
-      - name: Cache NDK
-        id: cache_ndk
-        uses: actions/cache@v3
-        with:
-          path: /tmp/android-ndk-r21e
-          key: android-ndk-${{ runner.os }}-r21e
+  #     - name: Cache NDK
+  #       id: cache_ndk
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: /tmp/android-ndk-r21e
+  #         key: android-ndk-${{ runner.os }}-r21e
 
-      - name: install prerequisites
-        run: sdk-src/build_scripts/android/install_prereqs.sh
+  #     - name: install prerequisites
+  #       run: sdk-src/build_scripts/android/install_prereqs.sh
 
-      - name: build sdk
-        run: |
-          sdk-src/build_scripts/android/build.sh firebase-cpp-sdk-android-build sdk-src
-          sdk-src/build_scripts/android/package.sh firebase-cpp-sdk-android-build firebase-cpp-sdk-android-package
-          cd firebase-cpp-sdk-android-package
-          tar -czhf ../firebase-cpp-sdk-android-package.tgz .
+  #     - name: build sdk
+  #       run: |
+  #         sdk-src/build_scripts/android/build.sh firebase-cpp-sdk-android-build sdk-src
+  #         sdk-src/build_scripts/android/package.sh firebase-cpp-sdk-android-build firebase-cpp-sdk-android-package
+  #         cd firebase-cpp-sdk-android-package
+  #         tar -czhf ../firebase-cpp-sdk-android-package.tgz .
 
-      - name: Print built libraries
-        shell: bash
-        run: |
-          find firebase-cpp-sdk-*-build -name "*.lib"
-          find firebase-cpp-sdk-*-build -name "*.dll"
-          find firebase-cpp-sdk-*-build -name "*.dylib"
-          find firebase-cpp-sdk-*-build -name "*.a"
-          find firebase-cpp-sdk-*-build -name "*.so"
-          find firebase-cpp-sdk-*-build -name "*.framework"
+  #     - name: Print built libraries
+  #       shell: bash
+  #       run: |
+  #         find firebase-cpp-sdk-*-build -name "*.lib"
+  #         find firebase-cpp-sdk-*-build -name "*.dll"
+  #         find firebase-cpp-sdk-*-build -name "*.dylib"
+  #         find firebase-cpp-sdk-*-build -name "*.a"
+  #         find firebase-cpp-sdk-*-build -name "*.so"
+  #         find firebase-cpp-sdk-*-build -name "*.framework"
 
-      - name: Print package contents
-        shell: bash
-        run: |
-          find firebase-cpp-sdk-*-package -type f
+  #     - name: Print package contents
+  #       shell: bash
+  #       run: |
+  #         find firebase-cpp-sdk-*-package -type f
 
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: firebase-cpp-sdk-android-package
-          path: firebase-cpp-sdk-android-package.tgz
+  #     - name: upload artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: firebase-cpp-sdk-android-package
+  #         path: firebase-cpp-sdk-android-package.tgz
 
   build_desktop:
     name: build-${{ matrix.sdk_platform }}-${{ matrix.architecture }}-${{ matrix.build_type }}-${{ matrix.msvc_runtime }}-${{ matrix.linux_abi }}
@@ -308,32 +308,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest-xxl, ubuntu-20-xl, macos-13-large]
+        os: [ ubuntu-20-xl,] #  macos-13-large, windows-latest-xxl,
         build_type: ["Release", "Debug"]
         architecture: ["x64", "x86", "arm64", "arm32"]
         msvc_runtime: ["static", "dynamic"]
         linux_abi: ["legacy", "c++11"]
         python_version: [3.8]
         include:
-        - os: windows-latest-xxl
-          vcpkg_triplet_suffix: "windows-static"
-          additional_build_flags: "--build_tests"
-          sdk_platform: "windows"
-        - os: windows-latest-xxl
-          msvc_runtime: "dynamic"
-          vcpkg_triplet_suffix: "windows-static-md"
-          additional_build_flags: "--build_tests"
-          sdk_platform: "windows"
+        # - os: windows-latest-xxl
+        #   vcpkg_triplet_suffix: "windows-static"
+        #   additional_build_flags: "--build_tests"
+        #   sdk_platform: "windows"
+        # - os: windows-latest-xxl
+        #   msvc_runtime: "dynamic"
+        #   vcpkg_triplet_suffix: "windows-static-md"
+        #   additional_build_flags: "--build_tests"
+        #   sdk_platform: "windows"
         - os: ubuntu-20-xl
           vcpkg_triplet_suffix: "linux"
           additional_build_flags: ""
           sdk_platform: "linux"
-        - os: macos-13-large
-          vcpkg_triplet_suffix: "osx"
-          additional_build_flags: "--target_format libraries"
-          sdk_platform: "darwin"
+        # - os: macos-13-large
+        #   vcpkg_triplet_suffix: "osx"
+        #   additional_build_flags: "--target_format libraries"
+        #   sdk_platform: "darwin"
 
         exclude:
+        # Temp exclude all windows
+        - os: windows-latest-xxl
+        # Temp exclude all mac
+        - os: macos-13-large
         - os: windows-latest-xxl
           linux_abi: "c++11"
         - os: macos-13-large
@@ -504,37 +508,37 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk_platform: [linux, darwin, windows]
+        sdk_platform: [linux] # darwin, windows
         suffix: ['']
         runs_on_platform: [ubuntu-20-xl]
-        include:
+        # include:
         # Split windows packaging into multiple runners.
-        - sdk_platform: windows
-          suffix: '-x86-Release-static'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: windows
-          suffix: '-x86-Release-dynamic'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: windows
-          suffix: '-x64-Release-static'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: windows
-          suffix: '-x64-Release-dynamic'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: windows
-          suffix: '-x86-Debug-static'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: windows
-          suffix: '-x86-Debug-dynamic'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: windows
-          suffix: '-x64-Debug-static'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: windows
-          suffix: '-x64-Debug-dynamic'
-          runs_on_platform: ubuntu-20-xl
-        - sdk_platform: darwin
-          runs_on_platform: macos-13-large
+        # - sdk_platform: windows
+        #   suffix: '-x86-Release-static'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: windows
+        #   suffix: '-x86-Release-dynamic'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: windows
+        #   suffix: '-x64-Release-static'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: windows
+        #   suffix: '-x64-Release-dynamic'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: windows
+        #   suffix: '-x86-Debug-static'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: windows
+        #   suffix: '-x86-Debug-dynamic'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: windows
+        #   suffix: '-x64-Debug-static'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: windows
+        #   suffix: '-x64-Debug-dynamic'
+        #   runs_on_platform: ubuntu-20-xl
+        # - sdk_platform: darwin
+        #   runs_on_platform: macos-13-large
         exclude:
         - sdk_platform: windows
           suffix: ''
@@ -743,7 +747,7 @@ jobs:
     name: final-merge-packages
     runs-on: ubuntu-latest-m
     if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
-    needs: [build_and_package_ios_tvos, build_and_package_android, package_desktop, log_inputs]
+    needs: [package_desktop, log_inputs]
     steps:
       - name: fetch SDK
         uses: actions/checkout@v3
@@ -801,49 +805,49 @@ jobs:
           name: firebase_cpp_sdk.zip
           path: firebase_cpp_sdk.zip
 
-  create_windows_only_package:
-    name: create-windows-only-package
-    runs-on: ubuntu-20-xl
-    needs: [merge_packages]
-    steps:
-      - name: download SDK zip
-        uses: actions/download-artifact@v3
-        with:
-          name: firebase_cpp_sdk.zip
-      - name: unzip SDK and remove non-Windows files
-        run: |
-          set -x
-          unzip -q firebase_cpp_sdk.zip -d windows-sdk
-          cd windows-sdk
-          # Rename the top-level directory.
-          mv firebase_cpp_sdk firebase_cpp_sdk_windows
-          cd firebase_cpp_sdk_windows
-          # Remove all non-Windows files.
-          rm -rf xcframeworks frameworks libs/linux libs/ios libs/tvos libs/darwin libs/android Android
-          cat > readme_windows.md <<EOF
-          # Firebase C++ SDK - Windows only
+  # create_windows_only_package:
+  #   name: create-windows-only-package
+  #   runs-on: ubuntu-20-xl
+  #   needs: [merge_packages]
+  #   steps:
+  #     - name: download SDK zip
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: firebase_cpp_sdk.zip
+  #     - name: unzip SDK and remove non-Windows files
+  #       run: |
+  #         set -x
+  #         unzip -q firebase_cpp_sdk.zip -d windows-sdk
+  #         cd windows-sdk
+  #         # Rename the top-level directory.
+  #         mv firebase_cpp_sdk firebase_cpp_sdk_windows
+  #         cd firebase_cpp_sdk_windows
+  #         # Remove all non-Windows files.
+  #         rm -rf xcframeworks frameworks libs/linux libs/ios libs/tvos libs/darwin libs/android Android
+  #         cat > readme_windows.md <<EOF
+  #         # Firebase C++ SDK - Windows only
 
-          This package contains only the subset of the Firebase C++ SDK needed for use on
-          Windows. For general SDK information, see the accompanying readme.md file.
-          EOF
-          cd ..
-          zip -9 -r -y ../firebase_cpp_sdk_windows.zip firebase_cpp_sdk_windows
-          cd ..
-      - name: compute Windows SDK hash
-        shell: bash
-        run: |
-          ${{ env.hashCommand }} --tag firebase_cpp_sdk_windows.zip > firebase_cpp_sdk_windows_hash.txt
-          echo "::warning ::$(cat firebase_cpp_sdk_windows_hash.txt)"
-      - name: upload Windows hash
-        uses: actions/upload-artifact@v3
-        with:
-          name: firebase_cpp_sdk_windows_hash.txt
-          path: firebase_cpp_sdk_windows_hash.txt
-      - name: upload Windows SDK zip
-        uses: actions/upload-artifact@v3
-        with:
-          name: firebase_cpp_sdk_windows.zip
-          path: firebase_cpp_sdk_windows.zip
+  #         This package contains only the subset of the Firebase C++ SDK needed for use on
+  #         Windows. For general SDK information, see the accompanying readme.md file.
+  #         EOF
+  #         cd ..
+  #         zip -9 -r -y ../firebase_cpp_sdk_windows.zip firebase_cpp_sdk_windows
+  #         cd ..
+  #     - name: compute Windows SDK hash
+  #       shell: bash
+  #       run: |
+  #         ${{ env.hashCommand }} --tag firebase_cpp_sdk_windows.zip > firebase_cpp_sdk_windows_hash.txt
+  #         echo "::warning ::$(cat firebase_cpp_sdk_windows_hash.txt)"
+  #     - name: upload Windows hash
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: firebase_cpp_sdk_windows_hash.txt
+  #         path: firebase_cpp_sdk_windows_hash.txt
+  #     - name: upload Windows SDK zip
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: firebase_cpp_sdk_windows.zip
+  #         path: firebase_cpp_sdk_windows.zip
   create_linux_only_package:
     name: create-linux-only-package
     runs-on: ubuntu-20-xl
@@ -911,7 +915,7 @@ jobs:
 
   trigger_integration_tests:
     # Trigger the integration_tests workflow.
-    needs: [merge_packages, download_sdk_package, create_windows_only_package, create_linux_only_package, cleanup_packaging_artifacts]
+    needs: [merge_packages, download_sdk_package, create_linux_only_package, cleanup_packaging_artifacts]
     if: (github.event.inputs.skipIntegrationTests == 0 || github.event.inputs.skipIntegrationTests == '') && !cancelled() && !failure()
     runs-on: ubuntu-20-xl
     steps:
