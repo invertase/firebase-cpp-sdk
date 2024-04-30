@@ -312,7 +312,7 @@ jobs:
         build_type: ["Release", "Debug"]
         architecture: ["x64", "x86", "arm64", "arm32"]
         msvc_runtime: ["static", "dynamic"]
-        linux_abi: ["legacy", "c++11"]
+        linux_abi: ["c++11"]
         python_version: [3.8]
         include:
         # - os: windows-latest-xxl
