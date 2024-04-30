@@ -352,8 +352,8 @@ jobs:
           architecture: "arm32"
         - os: ubuntu-20-xl
           msvc_runtime: "dynamic"
-        - os: ubuntu-20-xl
-          build_type: "Debug"
+        # - os: ubuntu-20-xl
+        #   build_type: "Debug"
         - os: windows-latest-xxl
           architecture: "arm64"
         - os: windows-latest-xxl
