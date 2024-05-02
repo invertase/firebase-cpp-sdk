@@ -351,6 +351,8 @@ jobs:
         - os: macos-13-large
           architecture: "arm32"
         - os: ubuntu-20-xl
+          build_type: "Release"
+        - os: ubuntu-20-xl
           msvc_runtime: "dynamic"
         # - os: ubuntu-20-xl
         #   build_type: "Debug"
