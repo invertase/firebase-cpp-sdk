@@ -55,7 +55,7 @@ std::string HomeDir(std::string* out_error) {
 std::string XdgDataHomeDir(std::string* out_error) {
   const char* data_home = getenv("XDG_DATA_HOME");
   if (data_home) return data_home;
-  return "";
+  return "/data";
 }
 
 bool Mkdir(const std::string& path, std::string* out_error) {
