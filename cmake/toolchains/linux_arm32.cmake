@@ -15,7 +15,7 @@
 # Toolchain file for building ARMv7 applications
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a+fp -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp -fPIC -std=c++11 -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp -fPIC -std=c++11")
 
 # Set the library and include paths
 set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf")
