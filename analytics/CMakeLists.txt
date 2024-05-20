@@ -88,7 +88,7 @@ else()
       "${stub_SRCS}")
 endif()
 
-add_library(firebase_analytics STATIC
+add_library(firebase_analytics SHARED
     ${common_SRCS}
     ${analytics_platform_SRCS})
 

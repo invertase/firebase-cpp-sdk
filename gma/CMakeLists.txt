@@ -91,7 +91,7 @@ else()
       "${stub_SRCS}")
 endif()
 
-add_library(firebase_gma STATIC
+add_library(firebase_gma SHARED
     ${common_SRCS}
     ${gma_platform_SRCS})
 

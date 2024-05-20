@@ -13,14 +13,14 @@
 # limitations under the License.
 
 # Toolchain file for building ARMv7 applications
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a+fp -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp -fPIC -std=c++11")
+# set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a+fp -fPIC")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a+fp -fPIC -std=c++11")
 
-# Set the library and include paths
-set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf")
-set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} "/usr/include/arm-linux-gnueabihf")
+# # Set the library and include paths
+# set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf")
+# set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} "/usr/include/arm-linux-gnueabihf")
 
-# Adjust PKG_CONFIG_PATH for cross-compilation
-set(ENV{PKG_CONFIG_PATH} "/usr/lib/arm-linux-gnueabihf/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+# # Adjust PKG_CONFIG_PATH for cross-compilation
+# set(ENV{PKG_CONFIG_PATH} "/usr/lib/arm-linux-gnueabihf/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 

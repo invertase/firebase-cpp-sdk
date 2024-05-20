@@ -39,7 +39,7 @@ set(rest_SRCS
     www_form_url_encoded.cc
     zlibwrapper.cc)
 
-add_library(firebase_rest_lib STATIC
+add_library(firebase_rest_lib SHARED
     ${rest_SRCS})
 
 target_include_directories(firebase_rest_lib

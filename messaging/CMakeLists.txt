@@ -64,7 +64,7 @@ else()
       "${desktop_SRCS}")
 endif()
 
-add_library(firebase_messaging STATIC
+add_library(firebase_messaging SHARED
     ${common_SRCS}
     ${messaging_platform_SRCS})
 

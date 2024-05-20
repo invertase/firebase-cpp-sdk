@@ -301,7 +301,7 @@ else()
       "${firebase_metadata_provider_desktop_SRCS}")
 endif()
 
-add_library(firebase_firestore STATIC
+add_library(firebase_firestore SHARED
     ${common_SRCS}
     ${firestore_platform_SRCS})
 

@@ -82,7 +82,7 @@ else()
       -DFIREBASE_TARGET_DESKTOP=1)
 endif()
 
-add_library(firebase_storage STATIC
+add_library(firebase_storage SHARED
     ${common_SRCS}
     ${storage_platform_SRCS})
 

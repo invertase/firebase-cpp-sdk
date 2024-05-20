@@ -340,7 +340,7 @@ else()
   set(app_flatbuffers_lib flatbuffers)
 endif()
 
-add_library(firebase_app STATIC
+add_library(firebase_app SHARED
     ${log_SRCS}
     ${log_HDRS}
     ${common_SRCS}

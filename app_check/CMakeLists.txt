@@ -134,7 +134,7 @@ else()
       firebase_rest_lib)
 endif()
 
-add_library(firebase_app_check STATIC
+add_library(firebase_app_check SHARED
     ${common_SRCS}
     ${app_check_platform_SRCS}
     ${app_check_HDRS})

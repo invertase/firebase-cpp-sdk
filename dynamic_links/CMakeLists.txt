@@ -43,7 +43,7 @@ else()
       "${stub_SRCS}")
 endif()
 
-add_library(firebase_dynamic_links STATIC
+add_library(firebase_dynamic_links SHARED
     ${common_SRCS}
     ${dynamic_links_platform_SRCS})
 

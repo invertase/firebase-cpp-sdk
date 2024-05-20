@@ -41,7 +41,7 @@ else()
       "${desktop_SRCS}")
 endif()
 
-add_library(firebase_installations STATIC
+add_library(firebase_installations SHARED
     ${common_SRCS}
     ${installations_platform_SRCS})
 

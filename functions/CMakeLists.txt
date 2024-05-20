@@ -55,7 +55,7 @@ else()
       firebase_rest_lib)
 endif()
 
-add_library(firebase_functions STATIC
+add_library(firebase_functions SHARED
     ${common_SRCS}
     ${functions_platform_SRCS})
 

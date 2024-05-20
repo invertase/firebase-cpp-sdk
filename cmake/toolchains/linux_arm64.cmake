@@ -13,14 +13,14 @@
 # limitations under the License.
 
 # Toolchain file for building ARMv8 applications
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a -fPIC -std=c++11")
+# set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a -fPIC")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a -fPIC -std=c++11")
 
-# Set the library and include paths
-set(CMAKE_LIBRARY_PATH "/usr/lib/aarch64-linux-gnu")
-set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} "/usr/include/aarch64-linux-gnu")
+# # Set the library and include paths
+# set(CMAKE_LIBRARY_PATH "/usr/lib/aarch64-linux-gnu")
+# set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} "/usr/include/aarch64-linux-gnu")
 
-# Adjust PKG_CONFIG_PATH for cross-compilation
-set(ENV{PKG_CONFIG_PATH} "/usr/lib/aarch64-linux-gnu/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+# # Adjust PKG_CONFIG_PATH for cross-compilation
+# set(ENV{PKG_CONFIG_PATH} "/usr/lib/aarch64-linux-gnu/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 

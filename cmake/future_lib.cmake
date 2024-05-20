@@ -57,7 +57,7 @@ function(define_future_lib CPP_NAMESPACE)
         ${FUTURE_LIB_SRC_DIR}/../app/src/log_stdio.cc)
   endif()
 
-  add_library("${library_name}" STATIC
+  add_library("${library_name}" SHARED
       ${FUTURE_LIB_SRC_DIR}/../app/src/cleanup_notifier.cc
       ${FUTURE_LIB_SRC_DIR}/../app/src/future_manager.cc
       ${FUTURE_LIB_SRC_DIR}/../app/src/reference_counted_future_impl.cc

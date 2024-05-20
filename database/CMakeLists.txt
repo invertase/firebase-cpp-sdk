@@ -189,7 +189,7 @@ if(MSVC)
   )
 endif()
 
-add_library(firebase_database STATIC
+add_library(firebase_database SHARED
     ${common_SRCS}
     ${database_platform_SRCS})
 

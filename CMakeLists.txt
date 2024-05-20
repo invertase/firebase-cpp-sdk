@@ -333,27 +333,27 @@ if(DESKTOP)
 endif()
 
 # Include Firestore's external build early to resolve conflicts on packages.
-if(FIRESTORE_USE_EXTERNAL_CMAKE_BUILD)
-  if(APPLE)
-    # On Apple, set GRPC_BAZEL_BUILD to fix an issue with __thread.
-    # Setting this define makes gRPC use pthread's thread-local storage
-    # instead of GCC's.
-    add_definitions(-DGRPC_BAZEL_BUILD=1)
-  endif()
-  set(FIRESTORE_BINARY_DIR ${FIRESTORE_SOURCE_DIR}-build)
+# if(FIRESTORE_USE_EXTERNAL_CMAKE_BUILD)
+#   if(APPLE)
+#     # On Apple, set GRPC_BAZEL_BUILD to fix an issue with __thread.
+#     # Setting this define makes gRPC use pthread's thread-local storage
+#     # instead of GCC's.
+#     add_definitions(-DGRPC_BAZEL_BUILD=1)
+#   endif()
+#   set(FIRESTORE_BINARY_DIR ${FIRESTORE_SOURCE_DIR}-build)
 
-  if(FIREBASE_CPP_BUILD_TESTS OR FIREBASE_CPP_BUILD_STUB_TESTS)
-    set(FIREBASE_IOS_BUILD_TESTS ON
-    CACHE BOOL "Force Firestore build tests to match")
-  else()
-    set(FIREBASE_IOS_BUILD_TESTS OFF
-    CACHE BOOL "Force Firestore build tests to match")
-  endif()
+#   if(FIREBASE_CPP_BUILD_TESTS OR FIREBASE_CPP_BUILD_STUB_TESTS)
+#     set(FIREBASE_IOS_BUILD_TESTS ON
+#     CACHE BOOL "Force Firestore build tests to match")
+#   else()
+#     set(FIREBASE_IOS_BUILD_TESTS OFF
+#     CACHE BOOL "Force Firestore build tests to match")
+#   endif()
 
-  add_subdirectory(${FIRESTORE_SOURCE_DIR} ${FIRESTORE_BINARY_DIR})
+#   add_subdirectory(${FIRESTORE_SOURCE_DIR} ${FIRESTORE_BINARY_DIR})
 
-  copy_subdirectory_definition(${FIRESTORE_SOURCE_DIR} NANOPB_SOURCE_DIR)
-endif()
+#   copy_subdirectory_definition(${FIRESTORE_SOURCE_DIR} NANOPB_SOURCE_DIR)
+# endif()
 
 # Disable the Flatbuffer build tests, install and flathash
 set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "")
@@ -433,7 +433,7 @@ if(DESKTOP)
       set(uWebSockets_extra_src
           ${UWEBSOCKETS_SOURCE_DIR}/src/Epoll.cpp)
     endif()
-    add_library(libuWS STATIC
+    add_library(libuWS SHARED
         ${uWebSockets_extra_src}
         ${UWEBSOCKETS_SOURCE_DIR}/src/Extensions.cpp
         ${UWEBSOCKETS_SOURCE_DIR}/src/Group.cpp
@@ -608,10 +608,10 @@ endif()
 if (FIREBASE_INCLUDE_DYNAMIC_LINKS)
   add_subdirectory(dynamic_links)
 endif()
-if (FIREBASE_INCLUDE_FIRESTORE)
-  add_subdirectory(firestore)
-  add_dependencies(FIREBASE_GENERATED_HEADERS FIREBASE_FIRESTORE_GENERATED_HEADERS)
-endif()
+# if (FIREBASE_INCLUDE_FIRESTORE)
+#   add_subdirectory(firestore)
+#   add_dependencies(FIREBASE_GENERATED_HEADERS FIREBASE_FIRESTORE_GENERATED_HEADERS)
+# endif()
 if (FIREBASE_INCLUDE_FUNCTIONS)
   add_subdirectory(functions)
 endif()

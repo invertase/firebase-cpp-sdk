@@ -114,7 +114,7 @@ else()
   endif()
 endif()
 
-add_library(firebase_remote_config STATIC
+add_library(firebase_remote_config SHARED
     ${common_SRCS}
     ${remote_config_platform_SRCS})
 
